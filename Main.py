@@ -1,10 +1,17 @@
 #coding=utf-8
+'''
+Created on 2015-5-4
+
+@author: skt
+'''
+
 
 import numpy as np 
 from DataDeal import ReadUserInfo, ReadUserloginDay, ReadUserGameOrder
 import csv
 import sys
 import time
+import function
 
 target = ['Datain']
 
@@ -16,30 +23,15 @@ def DataConstruct():
     start = time.time()
 
     userinfos = ReadUserInfo.Readuserinfo()
-    csvfile = file('Generate/userinfo.csv', 'wb')
-    f = csv.writer(csvfile)
-    for i in userinfos:
-        f.writerow(i)
-    csvfile.close()
-    print "User amounts : %d" % (len(userinfos))
+    function.myfunction.filewrite(userinfos, 'Generate/userinfo.csv')
+    print "User info : %d " % (len(userinfos))
 
     userlogindays = ReadUserloginDay.readUserloginDay()
-    csvfile = file('Generate/userlogindays.csv', 'wb')
-    f = csv.writer(csvfile)
-    for i in userlogindays:
-        f.writerow(i)
-    csvfile.close()
+    function.myfunction.filewrite(userlogindays, 'Generate/userlogindays.csv')
     print "User login day recoders : %d" % (len(userlogindays))
     
     userGameOrder = ReadUserGameOrder.readUserGameOrder()
-    csvfile = file('Generate/userGameOrder.csv', 'wb')
-    f = csv.writer(csvfile)
-    for i in userGameOrder:
-    
-        f.writerow(i)
-
-    csvfile.close()
-
+    function.myfunction.filewrite(userGameOrder, 'Generate/userGameOrder.csv')
     print "User Game Orders : %d" % (len(userGameOrder))
 
     end = time.time()
@@ -52,7 +44,6 @@ def DataRead():
     for line in open("Generate/userinfo.csv"):
         clientId, Gamelist, status, createTime, updateTime = line.strip().split(",")
         Gamelist = Gamelist.split('|')
-
         for i in Gamelist:
             if i is not "":
                 games.add(i)
@@ -74,11 +65,13 @@ def DataRead():
         if appkey is not "":
             games.add(appkey)
     
+    '''
+    保存游戏列表,其中该阶段,游戏列表数量为27
+    '''
     f = open("Generate/games.dat", "wb")
     for i in games:
         f.write(i)
         f.write("\n")
-
     f.close()
 
 if __name__ == '__main__':
