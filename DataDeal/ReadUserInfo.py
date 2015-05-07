@@ -11,8 +11,9 @@ def Readuserinfo():
     features = []
     for line in f.readlines():
         feature = (line.strip().replace('"', '')).split(',')
-        userinfo = [feature[0], feature[9], feature[12], feature[10], feature[11]]
-        features.append(userinfo)    
+        if feature[12] == '0':
+            userinfo = [feature[0], feature[9], feature[10], feature[11]]
+            features.append(userinfo)    
     f.close()
     return features
     

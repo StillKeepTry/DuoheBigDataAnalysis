@@ -40,7 +40,6 @@ def DataConstruct():
 
 '''
 挖掘用户与游戏之间的有用消息
-status: clientID -- Game, 是否 黑名单
 logincount + oneday : clientID -- Game, 登录次数
 successSmsCount : clientId -- Game, 支付情况
 
@@ -50,7 +49,7 @@ def DataRead():
     start = time.time()
     
     for line in open("Generate/userinfo.csv"):
-        clientId, Gamelist, status, createTime, updateTime = line.strip().split(",")
+        clientId, Gamelist, createTime, updateTime = line.strip().split(",")
         Gamelist = Gamelist.split('|')
         user.add(clientId)
         for i in Gamelist:
