@@ -8,14 +8,14 @@ Created on 2015-5-4
 
 import numpy as np 
 from DataDeal import ReadUserInfo, ReadUserloginDay, ReadUserGameOrder
-import csv
 import sys
 import time
 import function
+import os
 
 target = ['Datain']
 
-userinfo, userlogindays, userGameOrder, games = None, None, None, set()
+userinfo, userlogindays, userGameOrder, games, user = None, None, None, set(), set()
 
 # 数据读入部分
 
@@ -38,21 +38,29 @@ def DataConstruct():
 
     print "data preprocess step : " + str(end - start) + " seconds"
 
+'''
+挖掘用户与游戏之间的有用消息
+status: clientID -- Game, 是否 黑名单
+logincount + oneday : clientID -- Game, 登录次数
+successSmsCount : clientId -- Game, 支付情况
+
+保存游戏列表,其中在该阶段,游戏列表数量为27, 用户数为1197066
+'''
 def DataRead():    
     start = time.time()
     
     for line in open("Generate/userinfo.csv"):
         clientId, Gamelist, status, createTime, updateTime = line.strip().split(",")
         Gamelist = Gamelist.split('|')
+        user.add(clientId)
         for i in Gamelist:
             if i is not "":
                 games.add(i)
 
-    end = time.time()
-    print "data read cost " + str(end - start) + "seconds"
 
     for line in open("Generate/userlogindays.csv"):
         appkey, clientId, oneday, logincount = line.strip().split(",")
+        user.add(clientId)
         if appkey is not "":
             games.add(appkey)
     
@@ -62,17 +70,28 @@ def DataRead():
 
         cnt += 1
         clientId, appkey, status, successSmsCount, totalMoney, smsCount, successSmsCount, clientstatus = line.strip().split(",")
+        user.add(clientId)
         if appkey is not "":
             games.add(appkey)
     
-    '''
-    保存游戏列表,其中该阶段,游戏列表数量为27
-    '''
-    f = open("Generate/games.dat", "wb")
-    for i in games:
-        f.write(i)
-        f.write("\n")
-    f.close()
+    end = time.time()
+    print "data read cost " + str(end - start) + " seconds"
+
+    if os.path.isfile("Generate/games.dat") == False:
+        f = open("Generate/games.dat", "wb")
+        for i in games:
+            f.write(i)
+            f.write("\n")
+        f.close()
+    
+    if os.path.isfile("Generate/user.dat") == False:
+        f = open("Generate/user.dat", "wb")
+        for i in user:
+            f.write(i)
+            f.write("\n")
+        f.close()
+
+    print len(user)
 
 if __name__ == '__main__':
     args = sys.argv
