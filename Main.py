@@ -64,11 +64,7 @@ def DataRead():
         if appkey is not "":
             games.add(appkey)
     
-    cnt = 0
-
     for line in open("Generate/userGameOrder.csv"):
-
-        cnt += 1
         clientId, appkey, status, successSmsCount, totalMoney, smsCount, successSmsCount, clientstatus = line.strip().split(",")
         user.add(clientId)
         if appkey is not "":
