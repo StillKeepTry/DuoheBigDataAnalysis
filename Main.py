@@ -74,10 +74,12 @@ def DataRead():
         if appkey is not "":
             games.add(appkey)
     
-    file = open("Generate/games.dat", "wb")
+    f = open("Generate/games.dat", "wb")
     for i in games:
-        file.writerow(i)
-    file.close()
+        f.write(i)
+        f.write("\n")
+
+    f.close()
 
 if __name__ == '__main__':
     args = sys.argv
