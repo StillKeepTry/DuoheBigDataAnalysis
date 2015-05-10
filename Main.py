@@ -17,6 +17,8 @@ target = ['Datain']
 
 userinfo, userlogindays, userGameOrder, games, user = None, None, None, set(), set()
 
+user_game = dict()
+
 # 数据读入部分
 
 def DataConstruct():
@@ -42,6 +44,14 @@ def DataConstruct():
 挖掘用户与游戏之间的有用消息
 logincount + oneday : clientID -- Game, 登录次数
 successSmsCount : clientId -- Game, 支付情况
+totalMoney : 总金额
+smsCount : 总数量
+
+构建用户与游戏之间的偏好度,通过已有值,可以采用的信息是用户点击,和用户支付金额,以及用户订单数量
+
+定义 用户点击       :  alpha
+定义 用户支付金额   :  beta
+定义 用户订单数量   :  theta
 
 保存游戏列表,其中在该阶段,游戏列表数量为27, 用户数为1197066
 '''
@@ -62,12 +72,24 @@ def DataRead():
         user.add(clientId)
         if appkey is not "":
             games.add(appkey)
+            if clientId not in user_game:
+                user_game[clientId] = dict()
+            if appkey not in user_game[clientId]:
+                user_game[clientId][appkey] = {'logincount': 0, 'smsCount': 0, 'totalMoney': 0}
+            user_game[clientId][appkey]['logincount'] += logincount
+
     
     for line in open("Generate/userGameOrder.csv"):
         clientId, appkey, status, successSmsCount, totalMoney, smsCount, successSmsCount, clientstatus = line.strip().split(",")
         user.add(clientId)
         if appkey is not "":
             games.add(appkey)
+            if clientId not in user_game:
+                user_game[clientId] = dict()
+            if appkey not in user_game[clientId]:
+                user_game[clientId][appkey] = {'logincount': 0, 'smsCount': 0, 'totalMoney': 0}
+            user_game[clientId][appkey]['smsCount'] += smsCount
+            user_game[clientId][appkey]['totalMoney'] += totalMoney
     
     end = time.time()
     print "data read cost " + str(end - start) + " seconds"
@@ -87,6 +109,8 @@ def DataRead():
         f.close()
 
     print len(user)
+
+
 
 if __name__ == '__main__':
     args = sys.argv
