@@ -11,10 +11,19 @@ import numpy as np
 用户-游戏的影响因子
 由以下参数组成
 点击数, 支付金额, 购买订单
+
+在 影响因子 方面, 
+点击数最小,
+订单数
+
+alpha 对应 logincount
+alpha = 0.1 
 '''
 
 def getFactor(logincount, smsCount, totalMoney):
-    factor, alpha, beta, theta = 0.0
+    factor, alpha, beta, theta = 0.0, 0.0, 0.0, 0.0
+    
+    alpha = 0.1
 
 
 def UsertoGameNum(user_game):
@@ -27,4 +36,18 @@ def UsertoGameNum(user_game):
 
 def GametoUserNum(game_user):
     for (Game, User) in game_user.items():
-        print "appkey : %s \t有%d" % (Game, len(User))
+        print "appkey : {0:40} \t有 {1} 个" .format(Game, len(User))
+
+def UsertoGameFilter(user_game, upperbound):
+    f = open("Generate/user_filter.dat", "w")
+    cnt = 0
+    for (User, Games) in user_game.items():
+        if len(Games) >= upperbound:
+            for (game, c) in Games.items():
+                a = ",".join([User, game, str(c['logincount']), str(c['smsCount']), str(c['totalMoney'])])
+                f.write(a)
+                f.write("\n")
+        else:
+            cnt = cnt + len(Games)
+    f.close()
+    print "过滤掉 %d 条用户" % (cnt)

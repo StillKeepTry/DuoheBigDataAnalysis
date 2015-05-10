@@ -19,6 +19,8 @@ userinfo, userlogindays, userGameOrder, games, user = None, None, None, set(), s
 
 user_game, game_user = dict(), dict()
 
+upper = 3  ## 设置上届
+
 # 数据读入部分
 
 def DataConstruct():
@@ -130,17 +132,15 @@ def DataUser():
         user_game[user][appkey]['logincount'] += int(logincount)
         user_game[user][appkey]['smsCount'] += int(smsCount)
         user_game[user][appkey]['totalMoney'] += int(totalMoney)
+    # 统计用户行为
     Statistics.UserInfoStatistics.UsertoGameNum(user_game)
+    print "\n"
 
 def Userfilter():
-    f = open("Generate/user_file.dat", "w")
-
-def Gamefilter():
-    f = open("Generate/game_filter.dat", "w")
-
+    Statistics.UserInfoStatistics.UsertoGameFilter(user_game, upper)
 
 def DataGame():
-    f = open("Generate/user_game.dat", "r")
+    f = open("Generate/user_filter.dat", "r")
     for line in f:
         user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
         if appkey not in game_user:
@@ -150,6 +150,8 @@ def DataGame():
         game_user[appkey][user]['logincount'] += int(logincount)
         game_user[appkey][user]['smsCount'] += int(smsCount)
         game_user[appkey][user]['totalMoney'] += int(totalMoney)
+    ## 统计行为个数
+    print "过滤掉 %d 以下的用户后的Game to User\n" % (upper)
     Statistics.UserInfoStatistics.GametoUserNum(game_user)
     
 if __name__ == '__main__':
@@ -163,6 +165,7 @@ if __name__ == '__main__':
 
     if "DataUser" in args:
         DataUser()
+        Userfilter()
 
     if "DataGame" in args:
         DataGame()
