@@ -27,4 +27,4 @@ def UsertoGameNum(user_game):
 
 def GametoUserNum(game_user):
     for (Game, User) in game_user.items():
-        print "appkey : %s 有%d" % (Game, len(User))
+        print "appkey : %s \t有%d" % (Game, len(User))

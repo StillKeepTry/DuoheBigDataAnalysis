@@ -4,10 +4,6 @@ Created on 2015-5-4
 @author: skt
 '''
 
-import User
-import eta
-import numpy as np
-
 def readUserloginDay():
     features = []
     f = open('Data/u_user_login_day.csv', 'r')
