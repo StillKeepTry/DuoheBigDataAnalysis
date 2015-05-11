@@ -35,10 +35,12 @@ theta = 1.0
 
 def getFactor(logincount, smsCount, totalMoney):
     logincount = int(logincount)
+    logincount = math.log10(1 + logincount) / math.log10(2000.0)
     smsCount = int(smsCount)
-    logincount = math.log10(1 + logincount)
+    smsCount = math.log10(1 + smsCount)
     totalMoney = int(totalMoney)
-    factor, alpha, beta, theta, x  = 0.0, 1.0, 0.0, 0.2, 0.1
+    totalMoney = math.log10(1 + totalMoney) 
+    factor, alpha, beta, theta, x  = 0.0, 1.0, 0.0, 1.0, 0.1
     factor = (alpha * logincount + beta * smsCount) * (theta * totalMoney + x)
     return factor * 10
 

@@ -175,11 +175,29 @@ def getUserGame():
         value = Statistics.UserInfoStatistics.getFactor(logincount, smsCount, totalMoney) 
         User[i][j] = value
     for i in User:
-        print i
+        print sum(i)
     
 def getGameUser():
-    filename = "Generate/user_filter.dat", "r"
+    filename = "Generate/user_filter.dat"
     f = open(filename, "r")
+
+    UserIndex = function.myfunction.getUserIndex(filename)
+    GameIndex = function.myfunction.getGameIndex(filename)
+
+    Game = []
+    for i in range(0, len(GameIndex)):
+        Game.append([0 for j in range(0, len(UserIndex))])
+
+    print "游戏数 : %d , 用户数 : %d" % (len(GameIndex), len(UserIndex))
+
+    for line in f:
+        user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
+        i, j = GameIndex[appkey], UserIndex[user]
+        value = Statistics.UserInfoStatistics.getFactor(logincount, smsCount, totalMoney)
+        Game[i][j] = value
+    for i in Game:
+        print i
+
 
 if __name__ == '__main__':
     args = sys.argv
@@ -198,3 +216,6 @@ if __name__ == '__main__':
 
     if "User" in args:
         getUserGame()
+
+    if "Game" in args:
+        getGameUser()
