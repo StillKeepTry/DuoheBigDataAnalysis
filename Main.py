@@ -5,7 +5,6 @@ Created on 2015-5-4
 @author: skt
 '''
 
-import numpy as np 
 from DataDeal import ReadUserInfo, ReadUserloginDay, ReadUserGameOrder
 import sys
 import time
