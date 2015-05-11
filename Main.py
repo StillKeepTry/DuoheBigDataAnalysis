@@ -83,7 +83,9 @@ def DataRead():
 
     
     for line in open("Generate/userGameOrder.csv"):
-        clientId, appkey, status, successSmsCount, totalMoney, smsCount, successSmsCount, clientstatus = line.strip().split(",")
+        clientId, appkey, status, successMoney, totalMoney, smsCount, successSmsCount, clientstatus = line.strip().split(",")
+        totalMoney = successMoney
+        smsCount = successSmsCount
         user.add(clientId)
         if appkey is not "":
             games.add(appkey)
@@ -171,7 +173,7 @@ def getUserGame():
     for line in f:
         user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
         i, j = UserIndex[user], GameIndex[appkey]
-        value = Statistics.UserInfoStatistics.getFactor(logincount = logincount, smsCount = smsCount, totalMoney = totalMoney) 
+        value = Statistics.UserInfoStatistics.getFactor(logincount, smsCount, totalMoney) 
         User[i][j] = value
     for i in User:
         print i

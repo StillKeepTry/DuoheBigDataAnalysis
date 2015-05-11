@@ -22,6 +22,7 @@ import math
 订单数则表示出用户可能会频繁购买
 支付金额则表示用户支付的概况
 
+logincount 做平滑
 alpha 对应 logincount
 alpha = 0.1 
 
@@ -35,10 +36,11 @@ theta = 1.0
 def getFactor(logincount, smsCount, totalMoney):
     logincount = int(logincount)
     smsCount = int(smsCount)
+    logincount = math.log10(1 + logincount)
     totalMoney = int(totalMoney)
-    factor, alpha, beta, theta, x  = 0.0, 0.2, 0.5, 1.0, 5.0
-    factor = (alpha * logincount + beta * smsCount) * (totalMoney + x ) * theta
-    return factor / 10.0
+    factor, alpha, beta, theta, x  = 0.0, 1.0, 0.0, 0.2, 0.1
+    factor = (alpha * logincount + beta * smsCount) * (theta * totalMoney + x)
+    return factor * 10
 
 def UsertoGameNum(user_game):
     num = [0] * 30
@@ -106,6 +108,3 @@ def Tanimono(A, B):
         x2 = x2 + A[i] * A[i]
         y2 = y2 + B[i] * B[i]
     return (xy) / (math.sqrt(x2) + math.sqrt(y2) - xy)
-
-
-
