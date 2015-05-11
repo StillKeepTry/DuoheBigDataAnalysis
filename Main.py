@@ -121,7 +121,7 @@ def DataRead():
             f.write("\n")
     f.close()
 
-def DataUser():
+def UserFilter():
     f = open("Generate/user_game.dat", "r")
     for line in f:
         user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
@@ -135,11 +135,9 @@ def DataUser():
     # 统计用户行为
     Statistics.UserInfoStatistics.UsertoGameNum(user_game)
     print "\n"
-
-def Userfilter():
     Statistics.UserInfoStatistics.UsertoGameFilter(user_game, upper)
 
-def DataGame():
+def GameFilter():
     f = open("Generate/user_filter.dat", "r")
     for line in f:
         user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
@@ -154,6 +152,34 @@ def DataGame():
     print "过滤掉 %d 以下的用户后的Game to User\n" % (upper)
     Statistics.UserInfoStatistics.GametoUserNum(game_user)
     
+
+def getUserGame():
+    filename = "Generate/user_filter.dat"
+
+    f = open(filename, "r")
+
+    UserIndex = function.myfunction.getUserIndex(filename)
+    GameIndex = function.myfunction.getGameIndex(filename)
+
+    User = []
+
+    for i in range(0, len(UserIndex)):
+        User.append([0 for j in range(0, len(GameIndex))])
+
+    print "用户数 : %d , 游戏数 : %d" % (len(UserIndex), len(GameIndex))
+
+    for line in f:
+        user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
+        i, j = UserIndex[user], GameIndex[appkey]
+        value = Statistics.UserInfoStatistics.getFactor(logincount = logincount, smsCount = smsCount, totalMoney = totalMoney) 
+        User[i][j] = value
+    for i in User:
+        print i
+    
+def getGameUser():
+    filename = "Generate/user_filter.dat", "r"
+    f = open(filename, "r")
+
 if __name__ == '__main__':
     args = sys.argv
 
@@ -163,9 +189,11 @@ if __name__ == '__main__':
     if "Datain" in args:
         DataRead()
 
-    if "DataUser" in args:
-        DataUser()
-        Userfilter()
+    if "FilterUser" in args:
+        UserFilter()
 
-    if "DataGame" in args:
-        DataGame()
+    if "FilterGame" in args:
+        GameFilter()
+
+    if "User" in args:
+        getUserGame()
