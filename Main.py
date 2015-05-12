@@ -161,6 +161,15 @@ def getUserGame():
 
     UserIndex = function.myfunction.getUserIndex(filename)
     GameIndex = function.myfunction.getGameIndex(filename)
+    
+    reverseUserIndex = [0] * len(UserIndex) 
+    reverseGameIndex = [0] * len(GameIndex)
+    
+    for i in UserIndex:
+        reverseUserIndex[UserIndex[i]] = i
+
+    for i in GameIndex:
+        reverseGameIndex[GameIndex[i]] = i
 
     User = []
 
@@ -174,8 +183,15 @@ def getUserGame():
         i, j = UserIndex[user], GameIndex[appkey]
         value = Statistics.UserInfoStatistics.getFactor(logincount, smsCount, totalMoney) 
         User[i][j] = value
-    for i in User:
-        print sum(i)
+
+    similar = Statistics.UserInfoStatistics.Euclidean
+#    similar = Statistics.UserInfoStatistics.Pearson
+#    similar = Statistics.UserInfoStatistics.Cosine
+#    similar = Statistics.UserInfoStatistics.Tanimono
+
+    for i in range(0, len(UserIndex)):
+        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, 3, similar)
+        print nearestneighbour
     
 def getGameUser():
     filename = "Generate/user_filter.dat"
@@ -183,6 +199,15 @@ def getGameUser():
 
     UserIndex = function.myfunction.getUserIndex(filename)
     GameIndex = function.myfunction.getGameIndex(filename)
+
+    reverseUserIndex = [0] * len(UserIndex)
+    reverseGameIndex = [0] * len(GameIndex)
+
+    for i in UserIndex:
+        reverseUserIndex[UserIndex[i]] = i
+
+    for i in GameIndex:
+        reverseGameIndex[GameIndex[i]] = i
 
     Game = []
     for i in range(0, len(GameIndex)):
@@ -195,8 +220,12 @@ def getGameUser():
         i, j = GameIndex[appkey], UserIndex[user]
         value = Statistics.UserInfoStatistics.getFactor(logincount, smsCount, totalMoney)
         Game[i][j] = value
-    for i in Game:
-        print i
+    
+    similar = Statistics.UserInfoStatistics.Euclidean
+#    similar = Statistics.UserInfoStatistics.Pearson
+#    similar = Statistics.UserInfoStatistics.Cosine
+#    similar = Statistics.UserInfoStatistics.Tanimono
+
 
 
 if __name__ == '__main__':
