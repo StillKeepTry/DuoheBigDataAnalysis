@@ -20,6 +20,8 @@ user_game, game_user = dict(), dict()
 
 upper = 3  ## 设置上届
 
+TopN = 3
+
 # 数据读入部分
 
 def DataConstruct():
@@ -190,7 +192,7 @@ def getUserGame():
 #    similar = Statistics.UserInfoStatistics.Tanimono
 
     for i in range(0, len(UserIndex)):
-        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, 3, similar)
+        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, TopN, similar)
         print nearestneighbour
     
 def getGameUser():
@@ -226,7 +228,8 @@ def getGameUser():
 #    similar = Statistics.UserInfoStatistics.Cosine
 #    similar = Statistics.UserInfoStatistics.Tanimono
 
-
+    for i in range(0, len(GameIndex)):
+        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, Game, TopN, similar)
 
 if __name__ == '__main__':
     args = sys.argv
