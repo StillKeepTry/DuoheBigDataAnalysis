@@ -9,7 +9,7 @@ def readUserloginDay():
     f = open('Data/u_user_login_day.csv', 'r')
     for line in f.readlines():
         feature = (line.strip().replace('"', '')).split(',')
-        if feature[3] != "null":
+        if feature[3] != "null" and int(feature[6]) <= 1000:
             userloginday = [feature[2], feature[3], feature[4], feature[6]]
             features.append(userloginday)
     return features
