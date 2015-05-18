@@ -197,13 +197,15 @@ def getUserGame():
 
     pred = []
     
+    choose = 0.05
+
     for i in range(0, len(UserIndex)):
         nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, TopN, similar)
-        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i])
+        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], choose)
  
     Statistics.dataset.saveAns(pred)
     ans = Statistics.dataset.getAns()
-    print "最近邻算法: %s, TopN: %d, F1 值 : %lf" % (algorithm[0], TopN, ans)
+    print "基于用户, 最近邻算法: %s, TopN: %d, 选取物品上届: %lf, F1 值 : %lf" % (algorithm[0], TopN, choose, ans)
 
 def getGameUser():
     filename = "Generate/user_filter.dat"

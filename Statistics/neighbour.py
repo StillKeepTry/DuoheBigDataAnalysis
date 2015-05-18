@@ -27,7 +27,7 @@ nearestneighbour, 近似邻
 pos, 当前User
 '''
 
-def recommendation(User, nearestneighbour, pos, reverseGameIndex, Username):
+def recommendation(User, nearestneighbour, pos, reverseGameIndex, Username, choose):
     pred = []
     for i in range(len(User[pos])):
         pred.append([i, 0])
@@ -41,6 +41,6 @@ def recommendation(User, nearestneighbour, pos, reverseGameIndex, Username):
     pred.sort(key=lambda l:(l[1], l[0]), reverse=True)    
     ans = []
     for predict in pred:
-        if predict[1] > 0.05:
+        if predict[1] > choose:
             ans.append([Username, reverseGameIndex[predict[0]]])
     return ans
