@@ -25,3 +25,49 @@ def DatasetByFilterOneUserRecord(user_game):
                 fdata.write("\n")
     fdata.close()
     fpredict.close()
+
+def DatasetByFilterOnFile(filename):
+    f = open(filename, 'r')
+    user_game = dict()
+    for line in f:
+        user, appkey, logincount, smsCount, totalMoney = line.strip().split(",")
+        if user not in user_game:
+            user_game[user] = dict()
+        if appkey not in user_game[user]:
+            user_game[user][appkey] = {'logincount' : 0, 'smsCount' : 0, 'totalMoney' : 0}
+        user_game[user][appkey]['logincount'] += int(logincount)
+        user_game[user][appkey]['smsCount'] += int(smsCount)
+        user_game[user][appkey]['totalMoney'] += int(totalMoney)
+    DatasetByFilterOneUserRecord(user_game)
+
+def saveAns(user_game):
+    f = open("test/ans.dat", "w")
+    for i in user_game:
+        a = ",".join(i)
+        f.write(a)
+        f.write("\n")
+    f.close()
+
+def getAns():
+    predict = open("test/predict.dat", "r")
+    ans = open("test/ans.dat", "r")
+
+    a, b = set(), set()
+
+    for line in predict:
+        user, game = line.strip().split(",")
+        a.add((user, game))
+
+    c = 0
+
+    for line in ans:
+        user, game = line.strip().split(",")
+        b.add((user, game))
+        if (user, game) in a:
+            c += 1
+
+    a1 = c * 1.0 / len(a)
+    a2 = c * 1.0 / len(b)
+
+    a3 = 2.0 * a2 * a1 / (a1 + a2)
+    return a3

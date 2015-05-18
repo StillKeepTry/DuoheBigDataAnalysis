@@ -19,8 +19,7 @@ def readUserGameOrder():
         feature = line
         if len(feature) == 26:
             if feature[1] != "Unknown" and feature[15] == '1' and feature[1] != "null" and feature[5] == "1":
-                # clientId, appkey, status, successMoney, totalMoney, smsCount, successSmsCount, clientStatus
                 userGameOrder = [feature[1], feature[3], feature[5], feature[10], feature[11], feature[12], feature[13], feature[15]]
-            features.append(userGameOrder)
+                features.append(userGameOrder)
     return features
         

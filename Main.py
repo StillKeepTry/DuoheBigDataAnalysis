@@ -20,7 +20,7 @@ user_game, game_user = dict(), dict()
 
 upper = 3  ## 设置上届
 
-TopN = 3
+TopN = 4
 
 # 数据读入部分
 
@@ -139,6 +139,7 @@ def UserFilter():
     Statistics.UserInfoStatistics.UsertoGameNum(user_game)
     print "\n"
     Statistics.UserInfoStatistics.UsertoGameFilter(user_game, upper)
+    Statistics.dataset.DatasetByFilterOnFile("Generate/user_filter.dat")
 
 def GameFilter():
     f = open("Generate/user_filter.dat", "r")
@@ -157,7 +158,7 @@ def GameFilter():
     
 
 def getUserGame():
-    filename = "Generate/user_filter.dat"
+    filename = "test/test.dat"
 
     f = open(filename, "r")
 
@@ -169,6 +170,7 @@ def getUserGame():
     
     for i in UserIndex:
         reverseUserIndex[UserIndex[i]] = i
+
 
     for i in GameIndex:
         reverseGameIndex[GameIndex[i]] = i
@@ -191,10 +193,18 @@ def getUserGame():
 #    similar = Statistics.UserInfoStatistics.Cosine
 #    similar = Statistics.UserInfoStatistics.Tanimono
 
+    algorithm = ["Euclidean", "Pearson", "Cosine", "Tanimono"]
+
+    pred = []
+    
     for i in range(0, len(UserIndex)):
         nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, TopN, similar)
-        print nearestneighbour
-    
+        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i])
+ 
+    Statistics.dataset.saveAns(pred)
+    ans = Statistics.dataset.getAns()
+    print "最近邻算法: %s, TopN: %d, F1 值 : %lf" % (algorithm[0], TopN, ans)
+
 def getGameUser():
     filename = "Generate/user_filter.dat"
     f = open(filename, "r")
@@ -233,7 +243,7 @@ def getGameUser():
 
 if __name__ == '__main__':
     args = sys.argv
-
+    
     if "PreProcess" in args:
         DataConstruct()
 
