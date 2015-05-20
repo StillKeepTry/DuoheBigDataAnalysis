@@ -20,7 +20,7 @@ user_game, game_user = dict(), dict()
 
 upper = 3  ## 设置上届
 
-TopN = 4
+TopN = 3
 
 # 数据读入部分
 
@@ -188,8 +188,8 @@ def getUserGame():
         value = Statistics.UserInfoStatistics.getFactor(logincount, smsCount, totalMoney) 
         User[i][j] = value
 
-    similar = Statistics.UserInfoStatistics.Euclidean
-#    similar = Statistics.UserInfoStatistics.Pearson
+#    similar = Statistics.UserInfoStatistics.Euclidean
+    similar = Statistics.UserInfoStatistics.Pearson
 #    similar = Statistics.UserInfoStatistics.Cosine
 #    similar = Statistics.UserInfoStatistics.Tanimono
 
@@ -197,15 +197,32 @@ def getUserGame():
 
     pred = []
     
-    choose = 0.05
+    choose = 0.10
+    TopN = 4
+    
+    Statistics.neighbour.combine(User, UserIndex, reverseGameIndex, reverseUserIndex)
 
+#    for i in range(0, len(UserIndex)):
+#        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, TopN, similar)
+#        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], choose)
+    
     for i in range(0, len(UserIndex)):
-        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, TopN, similar)
-        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], choose)
- 
+        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, 5, Statistics.UserInfoStatistics.Euclidean)
+        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.05, upper=0.13)
+#
+#    for i in range(0, len(UserIndex)):
+#        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, 5, Statistics.UserInfoStatistics.Pearson)
+#        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.12)
+#
+#    for i in range(0, len(UserIndex)):
+#        nearestneighbour = Statistics.neighbour.calcNearestNeighbour(i, User, 5, Statistics.UserInfoStatistics.Cosine)
+#        pred = pred + Statistics.neighbour.recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.10)
+    
     Statistics.dataset.saveAns(pred)
     ans = Statistics.dataset.getAns()
-    print "基于用户, 最近邻算法: %s, TopN: %d, 选取物品上届: %lf, F1 值 : %lf" % (algorithm[0], TopN, choose, ans)
+    
+
+    print "基于用户, 最近邻算法: %s, TopN: %d, 选取物品上届: %lf, F1 值 : %lf" % (algorithm[1], TopN, choose, ans)
 
 def getGameUser():
     filename = "Generate/user_filter.dat"

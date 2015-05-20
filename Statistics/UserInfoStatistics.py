@@ -83,11 +83,13 @@ def Euclidean(A, B):
 # 皮尔逊
 def Pearson(A, B):
     n = len(A)
-    xy, x, y, x2, y2 = 0.0, sum(A), sum(B), 0.0, 0.0
+    xy, x, y, x2, y2 = 0.0, 0.0, 0.0, 0.0, 0.0
     for i in range(0, n):
         xy = xy + A[i] * B[i]
         x2 = x2 + A[i] * A[i]
         y2 = y2 + B[i] * B[i]
+        x = x + A[i]
+        y = y + B[i]
     sum = (1.0 * n * xy - x * y) / (math.sqrt(n * x2 - x * x) * math.sqrt(n * y2 - y * y))
     return sum
 

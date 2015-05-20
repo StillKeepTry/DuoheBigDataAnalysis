@@ -6,6 +6,7 @@ auther : skt
 '''
 
 import UserInfoStatistics
+import dataset
 
 def calcNearestNeighbour(userid, user, TopN, similar):
     a = []
@@ -27,7 +28,7 @@ nearestneighbour, 近似邻
 pos, 当前User
 '''
 
-def recommendation(User, nearestneighbour, pos, reverseGameIndex, Username, choose):
+def recommendation(User, nearestneighbour, pos, reverseGameIndex, Username, choose, upper=None):
     pred = []
     for i in range(len(User[pos])):
         pred.append([i, 0])
@@ -41,6 +42,34 @@ def recommendation(User, nearestneighbour, pos, reverseGameIndex, Username, choo
     pred.sort(key=lambda l:(l[1], l[0]), reverse=True)    
     ans = []
     for predict in pred:
-        if predict[1] > choose:
+        if predict[1] > choose and (upper == None or predict[1] < upper):
             ans.append([Username, reverseGameIndex[predict[0]]])
     return ans
+
+def combine(User, UserIndex, reverseGameIndex, reverseUserIndex):
+    pred = []
+
+    for i in range(0, len(UserIndex)):
+        nearestneighbour = calcNearestNeighbour(i, User, 5, UserInfoStatistics.Euclidean)
+        pred = pred + recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.05, upper=0.13)
+
+    for i in range(0, len(UserIndex)):
+        nearestneighbour = calcNearestNeighbour(i, User, 5, UserInfoStatistics.Pearson)
+        pred = pred + recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.12)
+    
+    a = set()
+    for i in pred:
+        if (i[0], i[1]) not in a:
+            a.add((i[0], i[1]))
+    pred = []
+
+    for i in a:
+        pred.append([i[0], i[1]])
+    
+    dataset.saveAns(pred)
+    ans = dataset.getAns()
+    
+    print "基于用户, 融合最近邻和皮尔逊, F1值: %lf" % (ans)
+
+
+
