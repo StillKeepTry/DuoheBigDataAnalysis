@@ -51,7 +51,7 @@ def combine(User, UserIndex, reverseGameIndex, reverseUserIndex):
 
     for i in range(0, len(UserIndex)):
         nearestneighbour = calcNearestNeighbour(i, User, 5, UserInfoStatistics.Euclidean)
-        pred = pred + recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.05, upper=0.13)
+        pred = pred + recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], 0.08, upper=0.13)
 
     for i in range(0, len(UserIndex)):
         nearestneighbour = calcNearestNeighbour(i, User, 5, UserInfoStatistics.Pearson)
@@ -71,5 +71,13 @@ def combine(User, UserIndex, reverseGameIndex, reverseUserIndex):
     
     print "基于用户, 融合最近邻和皮尔逊, F1值: %lf" % (ans)
 
+def calc(User, UserIndex, reverseGameIndex, reverseUserIndex, TopN, similar, choose):
+    pred = []
+    for i in range(0, len(UserIndex)):
+        nearestneighbour = calcNearestNeighbour(i, User, TopN, similar)
+        pred = pred + recommendation(User, nearestneighbour, i, reverseGameIndex, reverseUserIndex[i], choose)
+    dataset.saveAns(pred)
+    ans = dataset.getAns()
+    return ans
 
 
